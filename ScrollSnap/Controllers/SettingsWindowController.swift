@@ -7,6 +7,7 @@ import AppKit
 
 class SettingsWindowController: NSWindowController {
     private weak var overlayManager: OverlayManager?
+    private let localization = Localization.shared
     
     convenience init(overlayManager: OverlayManager) {
         let window = NSWindow(
@@ -17,7 +18,7 @@ class SettingsWindowController: NSWindowController {
         )
         window.center()
         window.level = .popUpMenu
-        window.title = "ScrollSnap Preferences"
+        window.title = Localization.shared.settingsWindowTitle
         window.backgroundColor = NSColor.windowBackgroundColor // Subtle gray background
         self.init(window: window)
         self.overlayManager = overlayManager
@@ -33,6 +34,7 @@ class SettingsWindowController: NSWindowController {
 
 class SettingsView: NSView {
     private weak var overlayManager: OverlayManager?
+    private let localization = Localization.shared
     
     init(frame: NSRect, overlayManager: OverlayManager) {
         self.overlayManager = overlayManager
@@ -46,7 +48,7 @@ class SettingsView: NSView {
     
     private func setupUI() {
         let resetButton = NSButton(
-            title: "Reset Selection and Menu Positions",
+            title: localization.resetPositionsTitle,
             target: self,
             action: #selector(resetPositions)
         )
@@ -65,7 +67,7 @@ class SettingsView: NSView {
         versionLabel.textColor = .secondaryLabelColor
         
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            versionLabel.stringValue = "Version \(version)"
+            versionLabel.stringValue = localization.versionLabel(version)
         }
         
         addSubview(versionLabel)

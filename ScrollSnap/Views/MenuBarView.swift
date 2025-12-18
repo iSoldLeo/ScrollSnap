@@ -13,6 +13,7 @@ class MenuBarView: NSView {
     private weak var manager: OverlayManager?
     private weak var overlayView: OverlayView?
     private let screenFrame: NSRect
+    private let localization = Localization.shared
     
     // MARK: - Initialization
     
@@ -87,7 +88,8 @@ class MenuBarView: NSView {
     /// Draw the Capture button inside the menu rectangle, toggling between "Capture" and "Save".
     private func drawCaptureButton(for menuRect: NSRect) {
         let buttonRect = getCaptureButtonRect(for: menuRect)
-        let label = manager?.getIsScrollingCaptureActive() == true ? "Save" : "Capture"
+        let isCapturing = manager?.getIsScrollingCaptureActive() == true
+        let label = localization.captureButtonLabel(isCapturing: isCapturing)
         
         drawText(label, in: buttonRect)
     }
@@ -107,7 +109,7 @@ class MenuBarView: NSView {
     private func drawOptionsButton(for menuRect: NSRect) {
         let buttonRect = getOptionsButtonRect(for: menuRect)
         drawVerticalBorder(at: buttonRect.maxX, minY: buttonRect.minY, maxY: buttonRect.maxY)
-        drawTextWithSymbol("Options ", symbol: "chevron.down", in: buttonRect)
+        drawTextWithSymbol(localization.optionsButtonLabel, symbol: "chevron.down", in: buttonRect)
     }
     
     /// Draws the drag button inside the menu rectangle.
@@ -287,7 +289,7 @@ class MenuBarView: NSView {
     private func createOptionsMenu() -> NSMenu {
         let menu = NSMenu()
         
-        let saveToItem = NSMenuItem(title: "Save to", action: nil, keyEquivalent: "")
+        let saveToItem = NSMenuItem(title: localization.saveToLabel, action: nil, keyEquivalent: "")
         saveToItem.isEnabled = false
         menu.addItem(saveToItem)
         
@@ -295,7 +297,9 @@ class MenuBarView: NSView {
         let destinations = Constants.Menu.Options.destinations
         
         for destination in destinations {
-            let item = NSMenuItem(title: destination, action: #selector(selectDestination(_:)), keyEquivalent: "")
+            let displayName = localization.destinationDisplayName(for: destination)
+            let item = NSMenuItem(title: displayName, action: #selector(selectDestination(_:)), keyEquivalent: "")
+            item.representedObject = destination
             item.target = self
             if destination == selectedOption {
                 item.state = .on
@@ -317,6 +321,10 @@ class MenuBarView: NSView {
         }
         sender.state = .on
         
-        UserDefaults.standard.set(sender.title, forKey: Constants.Menu.Options.selectedDestinationKey)
+        if let destinationKey = sender.representedObject as? String {
+            UserDefaults.standard.set(destinationKey, forKey: Constants.Menu.Options.selectedDestinationKey)
+        } else {
+            UserDefaults.standard.set(sender.title, forKey: Constants.Menu.Options.selectedDestinationKey)
+        }
     }
 }

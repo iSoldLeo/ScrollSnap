@@ -5,6 +5,8 @@
 
 import ScreenCaptureKit
 
+private let localization = Localization.shared
+
 // MARK: - Public API
 
 /// Captures a single screenshot of the specified rectangle on the active screen.
@@ -273,7 +275,8 @@ private func promptForFolderAccess(folderName: String, bookmarkKey: String) -> U
     openPanel.canChooseDirectories = true
     openPanel.canChooseFiles = false
     openPanel.canCreateDirectories = false
-    openPanel.message = "Please select your \(folderName) folder to grant ScrollSnap permission to save screenshots there."
+    let displayName = localization.destinationDisplayName(for: folderName)
+    openPanel.message = localization.folderAccessPrompt(for: displayName)
     openPanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(folderName)
     
     let response = openPanel.runModal()

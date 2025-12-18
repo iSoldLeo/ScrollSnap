@@ -6,6 +6,7 @@
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    private let localization = Localization.shared
     let overlayManager = OverlayManager()
     private var settingsWindowController: SettingsWindowController?
     private var permissionWindow: NSWindow?
@@ -43,13 +44,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupMainMenu() {
         let mainMenu = NSMenu()
         
-        let appMenuItem = NSMenuItem(title: "ScrollSnap", action: nil, keyEquivalent: "")
-        let appMenu = NSMenu(title: "ScrollSnap")
-        appMenu.addItem(withTitle: "About ScrollSnap", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
+        let appMenuItem = NSMenuItem(title: localization.appDisplayName, action: nil, keyEquivalent: "")
+        let appMenu = NSMenu(title: localization.appDisplayName)
+        appMenu.addItem(withTitle: localization.aboutMenuTitle, action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
         appMenu.addItem(NSMenuItem.separator())
-        appMenu.addItem(withTitle: "Preferences…", action: #selector(showSettingsWindow), keyEquivalent: ",")
+        appMenu.addItem(withTitle: localization.preferencesMenuTitle, action: #selector(showSettingsWindow), keyEquivalent: ",")
         appMenu.addItem(NSMenuItem.separator())
-        appMenu.addItem(withTitle: "Quit ScrollSnap", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: localization.quitMenuTitle, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appMenuItem.submenu = appMenu
         mainMenu.addItem(appMenuItem)
         
@@ -65,7 +66,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func showPermissionRequestWindow() {
-        let permissionView = PermissionRequestView()
+        let permissionView = PermissionRequestView(localization: localization)
         let hostingController = NSHostingController(rootView: permissionView)
         
         permissionWindow = NSWindow(
@@ -77,7 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         permissionWindow?.center()
         permissionWindow?.contentViewController = hostingController
-        permissionWindow?.title = "Screen Recording Permission"
+        permissionWindow?.title = localization.permissionWindowTitle
         permissionWindow?.level = .floating
         permissionWindow?.makeKeyAndOrderFront(nil)
     }

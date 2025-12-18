@@ -1,29 +1,31 @@
 import SwiftUI
 
 struct PermissionRequestView: View {
+    var localization: Localization = .shared
+    
     var body: some View {
         VStack(spacing: 24) {
             Image(systemName: "camera.fill")
                 .font(.system(size: 64))
                 .foregroundColor(.blue)
             
-            Text("Screen Recording Permission Required")
+            Text(localization.permissionTitle)
                 .font(.title2)
                 .bold()
             
-            Text("ScrollSnap needs screen recording permission to capture screenshots.")
+            Text(localization.permissionBody)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity)
             
-            Text("Please enable it in System Preferences > Security & Privacy > Screen Recording, then relaunch the app.")
+            Text(localization.permissionInstruction)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity)
             
-            Button("Quit") {
+            Button(localization.quitActionTitle) {
                 NSApplication.shared.terminate(nil)
             }
             .buttonStyle(.borderedProminent)

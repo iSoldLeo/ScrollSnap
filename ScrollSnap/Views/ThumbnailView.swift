@@ -22,6 +22,7 @@ class ThumbnailView: NSView {
     private var thumbnailTimer: Timer?
     /// Fire date of the timer for drag cancel checks
     private var timerFireDate: Date?
+    private let localization = Localization.shared
     
     /// State related to dragging interactions
     private struct DragState {
@@ -237,9 +238,9 @@ class ThumbnailView: NSView {
     override func rightMouseDown(with event: NSEvent) {
         let menu = NSMenu()
         
-        menu.addItem(withTitle: "Save", action: #selector(saveImageAction), keyEquivalent: "")
-        menu.addItem(withTitle: "Delete", action: #selector(deleteImage), keyEquivalent: "")
-        menu.addItem(withTitle: "Close", action: #selector(closeThumbnail), keyEquivalent: "")
+        menu.addItem(withTitle: localization.contextSave, action: #selector(saveImageAction), keyEquivalent: "")
+        menu.addItem(withTitle: localization.contextDelete, action: #selector(deleteImage), keyEquivalent: "")
+        menu.addItem(withTitle: localization.contextClose, action: #selector(closeThumbnail), keyEquivalent: "")
         
         NSMenu.popUpContextMenu(menu, with: event, for: self)
     }
